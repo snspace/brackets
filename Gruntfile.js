@@ -593,6 +593,12 @@ module.exports = function (grunt) {
         'compress:sw'
     ]);
 
+    // task: build dist/ for browser
+    grunt.registerTask('build-browser-not-compressed', [
+        'build-browser',
+        'swPrecache'
+    ]);
+
     // Default task.
     grunt.registerTask('default', ['test']);
 };

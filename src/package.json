@@ -1,4 +1,5 @@
 {
+  "version": "1.0.0",
   "name": "brackets-src",
   "dependencies": {
     "codemirror": "5.21.0",

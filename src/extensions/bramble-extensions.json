@@ -17,10 +17,10 @@
         "path": "extensions/default/CSSPseudoSelectorHints"
     },
     {
-        "path": "extensions/default/HtmlEntityCodeHints",
+        "path": "extensions/default/HTMLEntityCodeHints",
         "less": {
             "dist/extensions/default/HTMLEntityCodeHints/styles.css": [
-                "src/extensions/default/HtmlEntityCodeHints/styles.css"
+                "src/extensions/default/HTMLEntityCodeHints/styles.css"
             ]
         }
     },
