@@ -1,12 +1,15 @@
-# III(In-browser Inter-Planetary IDE) is based on Bramble, which is based on Brackets
+# III: In-browser Inter-Planetary IDE
+
+**Based on _Bramble_, which is based on _Brackets_**
 
 > [III](https://github.com/snspace/brackets) <- [Bramble](https://github.com/mozilla/brackets) <- [Brackets](https://github.com/adobe/brackets)
 
 ### Forwarding
 
-:doing: -> [IBIPFS](https://github.com/snspace/ibipfs) powered [FileSystemImpl](https://github.com/adobe/brackets/wiki/File-System-Implementations)
+:doing: -> [IBIPFS](https://github.com/snspace/ibipfs) powered [FileSystemImpl](https://github.com/adobe/brackets/wiki/File-System-Implementations) // `ibipfs.files`?
 :eyes: `dist/bramble.js` <-> `src/bramble/client/main.js` <-> `thirdparty/filer`
 :eyes: [filer: Node-like file system for browsers](https://github.com/filerjs/filer) // `.../providers/ibipfs.js`?
+> `ibipfs`: "This place is based on the abstraction of database(indexedDB, memory, websql), is it fit for me???" //`ibipfs.object`?
 
 :done:
 ---
