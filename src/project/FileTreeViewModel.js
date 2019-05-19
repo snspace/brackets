@@ -48,7 +48,7 @@ define(function (require, exports, module) {
      * @return {boolean} true if this is a file and not a directory
      */
     function isFile(entry) {
-        return entry.get("children") === undefined;
+        return (!entry) || entry.get("children") === undefined;
     }
 
     /**
@@ -968,6 +968,23 @@ define(function (require, exports, module) {
                 treeData = treeData.updateIn(objectPath, _addTimestamp);
             }
         });
+        return treeData;
+    }
+
+    /**
+     * @private
+     *
+     * Adds a cid to an entry.
+     */
+    function _markCidChanged(treeData, changed) {
+        console.log('changed: ' + JSON.stringify(changed));
+
+        var objectPath = _filePathToObjectPath(treeData, changed.absPath);
+        if (objectPath) {
+            treeData = treeData.updateIn(objectPath, function (entry) {
+                entry.set("cid", changed.cid);
+            });
+        }
         return treeData;
     }
 

@@ -1180,6 +1180,17 @@ define(function (require, exports, module) {
         var changes = {},
             self = this;
 
+        /*if (entry.cid) {
+            changes.changed = {
+                cid: entry.cid,
+                absPath: this.makeProjectRelativeIfPossible(entry.fullPath)
+            }
+
+            this._viewModel.processChanges(changes);
+
+            return;
+        }*/
+
         if (entry.isFile) {
             changes.changed = [
                 this.makeProjectRelativeIfPossible(entry.fullPath)
@@ -1187,7 +1198,7 @@ define(function (require, exports, module) {
         } else {
             // Special case: a directory passed in without added and removed values
             // needs to be updated.
-            if (!added && !removed) {
+            if (!added && !removed && !entry.cid) {
                 entry.getContents(function (err, contents) {
                     if (err) {
                         console.error("Unexpected error refreshing file tree for directory " + entry.fullPath + ": " + err, err.stack);

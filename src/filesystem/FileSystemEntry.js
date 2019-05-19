@@ -82,12 +82,21 @@ define(function (require, exports, module) {
      * @param {FileSystem} fileSystem The file system associated with this entry.
      */
     function FileSystemEntry(path, fileSystem) {
-        this._setPath(path);
         this._fileSystem = fileSystem;
         this._id = nextId++;
+
+        this._impl.getxattr(path, "cid", (err, value) => {
+            if (err) {
+              return;
+            }
+
+            this._cid = value;
+        });
+
+        this._setPath(path);
     }
 
-    // Add "fullPath", "name", "parent", "id", "isFile" and "isDirectory" getters
+    // Add "fullPath", "name", "cid", "parent", "id", "isFile" and "isDirectory" getters
     Object.defineProperties(FileSystemEntry.prototype, {
         "fullPath": {
             get: function () { return this._path; },
@@ -96,6 +105,10 @@ define(function (require, exports, module) {
         "name": {
             get: function () { return this._name; },
             set: function () { throw new Error("Cannot set name"); }
+        },
+        "cid": {
+            get: function () { return this._cid; },
+            set: function () { throw new Error("Cannot set cid"); }
         },
         "parentPath": {
             get: function () { return this._parentPath; },
@@ -118,6 +131,8 @@ define(function (require, exports, module) {
             set: function () { throw new Error("Cannot set _impl"); }
         }
     });
+
+    FileSystemEntry.prototype._cid = null;
 
     /**
      * Cached stat object for this file.
@@ -587,6 +602,45 @@ define(function (require, exports, module) {
                     callback(null);
                 }
             }.bind(this));
+        }.bind(this));
+    };
+
+    /**
+     * Set custom attribute of this entry. If the underlying file system doesn't support, ignored.
+     *
+     * @param {function (?string)=} callback Callback with a single FileSystemError
+     *      string parameter.
+     */
+    FileSystemEntry.prototype.setCid = function (value, callback) {
+        if (!this._impl.setxattr) {
+            callback("Ignored: the underlying file system doesn't support setting custom attribute!");
+            return;
+        }
+
+        callback = callback || function () {};
+
+        // Block external change events until after the write has finished
+        this._fileSystem._beginChange();
+
+        this._clearCachedData();
+        this._impl.setxattr(this._path, "cid", value, function (err) {
+
+            if (err) {
+                callback("Error setting cid: " + err);
+                return;
+            }
+
+            this._cid = value;
+            // Update internal filesystem state
+            try {
+                // Notify the caller
+                callback(null);
+            } finally {
+                // Notify rename listeners
+                this._fileSystem._fireChangeEvent(this);
+            }
+
+            callback();
         }.bind(this));
     };
 

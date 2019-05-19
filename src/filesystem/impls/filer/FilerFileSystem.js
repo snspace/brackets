@@ -459,6 +459,38 @@ define(function (require, exports, module) {
         callback();
     }
 
+    function setxattr(path, name, value, callback) {
+        path = decodePath(path);
+
+        fs.setxattr(path, name, value, function (err) {
+            if (err) {
+                callback(_mapError(err));
+                return;
+            }
+            callback();
+        });
+    }
+
+    function getxattr(path, name, callback) {
+        path = decodePath(path);
+
+        fs.getxattr(path, name, function (err, value) {
+            callback(err, value);
+        });
+    }
+
+    function removexattr(path, name, callback) {
+        path = decodePath(path);
+
+        fs.removexattr(path, name, function (err) {
+            if (err) {
+                callback(_mapError(err));
+                return;
+            }
+            callback();
+        });
+    }
+
     // Export public API
     exports.showOpenDialog  = showOpenDialog;
     exports.showSaveDialog  = showSaveDialog;
@@ -478,4 +510,8 @@ define(function (require, exports, module) {
 
     exports.recursiveWatch    = true;
     exports.normalizeUNCPaths = false;
+
+    exports.setxattr        = setxattr;
+    exports.getxattr        = getxattr;
+    exports.removexattr     = removexattr;
 });

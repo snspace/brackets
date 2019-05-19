@@ -688,6 +688,19 @@ define(function (require, exports, module) {
 
     });
 
+    /**
+     * Called after a file or folder attribute has changed. This function is responsible
+     * for updating underlying model data and notifying all views of the change.
+     *
+     * @param {string} fullPath The path of the file/folder
+     * @param {string} name The name of the attribute
+     * @param {string} value The value of the attribute
+     */
+    function notifyPathAttrChanged(fullPath, name, value) {
+        // Send a "currentDocumentChange" event. This will trigger the views to update.
+        exports.trigger("currentDocumentChange", name, value);
+    }
+
     // Deprecated APIs
     exports.getWorkingSet                  = getWorkingSet;
     exports.findInWorkingSet               = findInWorkingSet;
@@ -714,6 +727,8 @@ define(function (require, exports, module) {
     exports.notifyPathNameChanged       = notifyPathNameChanged;
     exports.notifyPathDeleted           = notifyPathDeleted;
     exports.notifyFileDeleted           = notifyFileDeleted;
+
+    exports.notifyPathAttrChanged       = notifyPathAttrChanged;
 
     // Performance measurements
     PerfUtils.createPerfMeasurement("DOCUMENT_MANAGER_GET_DOCUMENT_FOR_PATH", "DocumentManager.getDocumentForPath()");

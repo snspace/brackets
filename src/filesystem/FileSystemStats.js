@@ -29,7 +29,7 @@ define(function (require, exports, module) {
 
     /**
      * @constructor
-     * @param {{isFile: boolean, mtime: Date, size: Number, realPath: ?string, hash: object}} options
+     * @param {{isFile: boolean, mtime: Date, size: Number, realPath: ?string, hash: object, cid: string}} options
      */
     function FileSystemStats(options) {
         var isFile = options.isFile;
@@ -44,6 +44,9 @@ define(function (require, exports, module) {
         // as a valueOf modification time -> calculate here if it's not present
         this._hash = options.hash || this._mtime.valueOf();
 
+        // III
+        this._cid = options.cid;
+
         var realPath = options.realPath;
         if (realPath) {
             if (!isFile && realPath[realPath.length - 1] !== "/") {
@@ -54,7 +57,7 @@ define(function (require, exports, module) {
         }
     }
 
-    // Add "isFile", "isDirectory", "mtime" and "size" getters
+    // Add "isFile", "isDirectory", "mtime", "size" and "cid" getters
     Object.defineProperties(FileSystemStats.prototype, {
         "isFile": {
             get: function () { return this._isFile; },
@@ -74,6 +77,10 @@ define(function (require, exports, module) {
         },
         "realPath": {
             get: function () { return this._realPath; },
+            set: function () { throw new Error("Cannot set realPath"); }
+        },
+        "cid": {
+            get: function () { return this._cid; },
             set: function () { throw new Error("Cannot set realPath"); }
         }
     });
@@ -115,6 +122,12 @@ define(function (require, exports, module) {
      * @type {?string}
      */
     FileSystemStats.prototype._realPath = null;
+
+    /**
+     * Content-addressed cid for the entry
+     * @type {object}
+     */
+    FileSystemStats.prototype._cid = null;
 
     module.exports = FileSystemStats;
 });

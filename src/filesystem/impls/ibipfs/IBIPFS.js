@@ -1,3 +1,5 @@
+/* Based on `filesystem/impls/filer/FilerFileSystem.js`, `ibipfs` is available, it plays as a `watcher`. */
+
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, regexp: true, indent: 4, maxerr: 50 */
 /*global define */
 
@@ -14,10 +16,9 @@ define(function (require, exports, module) {
      *  - writeFileASBinary()
      */
 
-    var ibipfs = global.ibipfs || window.ibipfs;
-
     var FileSystemError = require("filesystem/FileSystemError"),
         FileSystemStats = require("filesystem/FileSystemStats"),
+        BracketsFiler   = require("filesystem/impls/filer/BracketsFiler"),
         UrlCache       = require("filesystem/impls/filer/UrlCache"),
         decodePath      = require("filesystem/impls/filer/FilerUtils").decodePath,
         Handlers        = require("filesystem/impls/filer/lib/handlers"),
@@ -27,7 +28,9 @@ define(function (require, exports, module) {
         FileSystemCache = require("filesystem/impls/filer/FileSystemCache"),
         ImageResizer    = require("filesystem/impls/filer/lib/ImageResizer");
 
-    var watchers        = {};
+    var fs              = BracketsFiler.fs(),
+        Path            = BracketsFiler.Path,
+        watchers        = {};
 
     // We currently do *not* do write consistency checks, since only a single instance
     // of the app tends to use a mounted path at a time in Bramble.  If you need to
@@ -35,7 +38,7 @@ define(function (require, exports, module) {
     // enable this.
     var _doConsistencyCheck = false;
 
-    var _changeCallback;            // Callback to notify FileSystem of watcher changes
+    var _changeCallback, _offlineCallback;            // Callback to notify FileSystem of watcher changes
 
     function showOpenDialog(allowMultipleSelection, chooseDirectories, title, initialPath, fileTypes, callback) {
         throw new Error("Filer dialogs not supported. See: https://github.com/humphd/brackets/pull/309");
@@ -108,16 +111,21 @@ define(function (require, exports, module) {
     function stat(path, callback) {
         path = decodePath(path);
 
-        ibipfs.files.stat(path, function(err, stats) {
+        fs.stat(path, function(err, stats) {
             if (err){
                 callback(_mapError(err));
                 return;
             }
 
+            var mtime = new Date(stats.mtime);
+
             var options = {
-                isFile: stats.type === "file",
+                isFile: stats.type === "FILE",
+                mtime: mtime,
                 size: stats.size,
-                hash: hash
+                // TODO: figure out how to deal with realPath
+                realPath: path,
+                hash: mtime.getTime()
             };
 
             var fsStats = new FileSystemStats(options);
@@ -130,8 +138,8 @@ define(function (require, exports, module) {
     function exists(path, callback) {
         path = decodePath(path);
 
-        ibipfs.files.ls(path, function(err, exists) {
-            callback(err, exists);
+        fs.exists(path, function(exists) {
+            callback(null, exists);
         });
     }
 
@@ -139,7 +147,7 @@ define(function (require, exports, module) {
         path = decodePath(path);
         path = Path.normalize(path);
 
-        ibipfs.files.ls(path, function (err, contents) {
+        fs.readdir(path, function (err, contents) {
             if (err) {
                 callback(_mapError(err));
                 return;
@@ -171,7 +179,7 @@ define(function (require, exports, module) {
             callback = mode;
         }
 
-        ibipfs.files.mkdir(path, mode, function (err) {
+        fs.mkdir(path, mode, function (err) {
             if (err) {
                 callback(_mapError(err));
                 return;
@@ -210,7 +218,7 @@ define(function (require, exports, module) {
             });
         }
 
-        ibipfs.files.mv(oldPath, newPath, _wrap(updateURL));
+        fs.rename(oldPath, newPath, _wrap(updateURL));
     }
 
     function readFile(path, options, callback) {
@@ -242,7 +250,7 @@ define(function (require, exports, module) {
             });
         }
 
-        ibipfs.files.read(path, options.encoding, function (_err, _data) {
+        fs.readFile(path, options.encoding, function (_err, _data) {
             if (_err) {
                 callback(_mapError(_err));
                 return;
@@ -312,7 +320,7 @@ define(function (require, exports, module) {
                 },
                 // Once this runs, data is no longer owned by this window
                 function step2RemoteWriteFile(callback) {
-                    ibipfs.files.write(path, data, options.encoding, function (err) {
+                    fs.writeFile(path, data, options.encoding, function (err) {
                         if (err) {
                             callback(err);
                             return;
@@ -353,7 +361,7 @@ define(function (require, exports, module) {
                 console.error("Blind write attempted: ", path, stats._hash, options.expectedHash);
 
                 if (options.hasOwnProperty("expectedContents")) {
-                    ibipfs.files.read(path, options.encoding, function (_err, _data) {
+                    fs.readFile(path, options.encoding, function (_err, _data) {
                         if (_err || _data !== options.expectedContents) {
                             callback(FileSystemError.CONTENTS_MODIFIED);
                             return;
@@ -374,7 +382,7 @@ define(function (require, exports, module) {
 
     function _rmfr(path, callback) {
         // Regardless of whether we're passed a file or dir path, recursively delete it all.
-        ibipfs.files.rm(path, {recursive: true}, function(err) {
+        fs.rm(path, {recursive: true}, function(err) {
             if (err) {
                 callback(_mapError(err));
                 return;
@@ -410,6 +418,7 @@ define(function (require, exports, module) {
 
     function initWatchers(changeCallback, offlineCallback) {
         _changeCallback = changeCallback;
+        _offlineCallback = offlineCallback;
     }
 
     function watchPath(path, filterGlobs, callback) {

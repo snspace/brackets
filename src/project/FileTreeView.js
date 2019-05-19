@@ -43,7 +43,8 @@ define(function (require, exports, module) {
         KeyEvent          = require("utils/KeyEvent"),
         DragAndDrop       = require("utils/DragAndDrop"),
         UrlCache          = require("filesystem/impls/filer/UrlCache"),
-        Menus             = require("command/Menus");
+        Menus             = require("command/Menus"),
+        ProjectManager    = require("project/ProjectManager");
 
     // XXXBramble
     var FilerUtils        = require("filesystem/impls/filer/FilerUtils"),
@@ -411,7 +412,7 @@ define(function (require, exports, module) {
         },
 
         startRename: function () {
-            if (!this.props.entry.get("rename")) {
+            if (this.props.entry && !this.props.entry.get("rename")) {
                 this.props.actions.startRename(this.myPath());
             }
         },
@@ -496,10 +497,13 @@ define(function (require, exports, module) {
         },
 
         render: function () {
+            var selectedItem = ProjectManager.getSelectedItem();
+
             var fullname = this.props.name,
                 ext = LanguageManager.getCompoundFileExtension(fullname),
                 name = _getName(fullname, ext),
                 mime = Content.mimeFromExt(ext),
+                cid = selectedItem ? selectedItem.cid : null,
                 fileType;
 
             // Figure out which icon we want to show, relying on Content Type info.
@@ -537,7 +541,8 @@ define(function (require, exports, module) {
                 }, "." + ext);
             }
 
-            var nameDisplay,
+            var cidDisplay,
+                nameDisplay,
                 cx = Classnames;
 
             var fileClasses = cx({
@@ -585,6 +590,12 @@ define(function (require, exports, module) {
             }
 
             liArgs.push(nameDisplay);
+
+            if (cid && this.props.entry && this.props.entry.get("selected")) {
+                cid = DOM.a({}, cid);
+                cidDisplay = DOM.span({}, cid);
+                liArgs.push(cidDisplay);
+            }
 
             return DOM.li.apply(DOM.li, liArgs);
         }
@@ -802,7 +813,10 @@ define(function (require, exports, module) {
         },
 
         render: function () {
-            var entry = this.props.entry,
+            var selectedItem = ProjectManager.getSelectedItem();
+
+            var cid = selectedItem ? selectedItem.cid : null,
+                entry = this.props.entry,
                 nodeClass,
                 childNodes,
                 children = entry.get("children"),
@@ -824,7 +838,8 @@ define(function (require, exports, module) {
                 nodeClass = "closed";
             }
 
-            var nameDisplay,
+            var cidDisplay,
+                nameDisplay,
                 cx = Classnames;
 
             var directoryClasses = cx({
@@ -865,6 +880,13 @@ define(function (require, exports, module) {
             }
 
             liArgs.push(nameDisplay);
+
+            if (cid && entry && entry.get("selected")) {
+                cid = DOM.a({}, cid);
+                cidDisplay = DOM.span({}, cid);
+                liArgs.push(cidDisplay);
+            }
+
             liArgs.push(childNodes);
 
             return DOM.li.apply(DOM.li, liArgs);
@@ -906,6 +928,7 @@ define(function (require, exports, module) {
 
             var contents = this.props.contents,
                 namesInOrder = _sortDirectoryContents(contents, this.props.sortDirectoriesFirst);
+                //namesInOrder = _sortDirectoryContents(contents, this.props.sortDirectoriesFirst);
 
             return DOM.ul(ulProps, namesInOrder.map(function (name) {
                 var entry = contents.get(name);

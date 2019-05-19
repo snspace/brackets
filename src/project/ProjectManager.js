@@ -1397,6 +1397,27 @@ define(function (require, exports, module) {
         _renderTree(true);
     }
 
+    /**
+     * Update file or directory from project
+     * @param {!(File|Directory)} entry File or Directory to update
+     */
+    function setCid(entry, value) {
+        var result = new $.Deferred();
+
+        entry.setCid(value, function (err) {
+            if (!err) {
+                _renderTreeSync();
+                result.resolve();
+            } else {
+                _showErrorDialog(ERR_TYPE_DELETE, entry.isDirectory, FileUtils.getFileErrorString(err), entry.fullPath);
+
+                result.reject(err);
+            }
+        });
+
+        return result.promise();
+    }
+
 
     // Private API helpful in testing
     exports._actionCreator                = actionCreator;
@@ -1406,6 +1427,7 @@ define(function (require, exports, module) {
     exports._setFileTreeSelectionWidth    = _setFileTreeSelectionWidth;
 
     // Define public API
+    exports.setCid                        = setCid;
     exports.getProjectRoot                = getProjectRoot;
     exports.getBaseUrl                    = getBaseUrl;
     exports.setBaseUrl                    = setBaseUrl;

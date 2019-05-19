@@ -230,7 +230,8 @@ module.exports = function (grunt) {
                         'src/bramble/client/**/*.js',
                         'src/bramble/thirdparty/**/*.js',
                         'src/bramble/ChannelUtils.js',
-                        'thirdparty/filer/dist/filer.min.js',
+                        'thirdparty/filer/dist/filer.js',
+                        //'thirdparty/filer/dist/filer.min.js',
                     ]
                 },
                 // Standalone, minified dist/bramble.js iframe api

@@ -1,4 +1,5 @@
 # III: In-browser Inter-Planetary IDE
+> The `Web` is largely empowered by our developers, who deserves to having powerful IDE(III), within the `Web`.
 
 **Based on _Bramble_, which is based on _Brackets_**
 
@@ -6,10 +7,16 @@
 
 ### Forwarding
 
-:doing: -> [IBIPFS](https://github.com/snspace/ibipfs) powered [FileSystemImpl](https://github.com/adobe/brackets/wiki/File-System-Implementations) // `ibipfs.files`?
-:eyes: `dist/bramble.js` <-> `src/bramble/client/main.js` <-> `thirdparty/filer`
+:doing: -> [IBIPFS](https://github.com/snspace/ibipfs) for Inter-Planetary
+`III/Bramble/Brackets`:
+- Menu[IBIPFS]? or
+- `src/main` <-> `filesystem/impls/ibipfs` <-> `src/iii/client/main.js` <-> `thirdparty/ibipfs`?
+:eyes: `Brackets`: [FileSystemImpl](https://github.com/adobe/brackets/wiki/File-System-Implementations)
+- `filesystem/FileSystem.js - require("fileSystemImpl")` <-> `src/main.js`
+:eyes: `Bramble/Brackets`: `src/main` <-> `filesystem/impls/filer` <-> `src/bramble/client/main.js` <-> `thirdparty/filer`
 :eyes: [filer: Node-like file system for browsers](https://github.com/filerjs/filer) // `.../providers/ibipfs.js`?
-> `ibipfs`: "This place is based on the abstraction of database(indexedDB, memory, websql), is it fit for me???" //`ibipfs.object`?
+> `ibipfs`: "This place is based on the abstraction of database(indexedDB, memory, websql), is it fit for me???" // `ibipfs.object`(which is a _legacy_ API)?   
+> `ibipfs`: `filer` looks like the `files`(MFS) perspective of mine. // Both are `indexedDB` behind the scene?
 
 :done:
 ---

@@ -56,7 +56,8 @@ define(function (require, exports, module) {
         UrlParams           = require("utils/UrlParams").UrlParams,
         StatusBar           = require("widgets/StatusBar"),
         WorkspaceManager    = require("view/WorkspaceManager"),
-        _                   = require("thirdparty/lodash");
+        _                   = require("thirdparty/lodash"),
+        IBIPFS              = require("thirdparty/ibipfs");
 
     // XXXBramble specific
     var BracketsFiler      = require("filesystem/impls/filer/BracketsFiler");
@@ -1824,6 +1825,69 @@ define(function (require, exports, module) {
         }, 100);
     }
 
+    function handleIBIPFS() {
+        console.log('IBIPFS: Being Inter-Planetary ...');
+
+        if (!IBIPFS.isReady()) {
+          IBIPFS.init();
+        } else {
+            console.log('IBIPFS: Being Already!')
+        }
+    }
+
+    function handleIBIPFSGo(path) {
+        console.log('Going Inter-Planetary ...');
+
+        var options = {
+            fs: fs
+        }
+
+        var selectedItem 
+
+        if(!path) {
+            selectedItem = ProjectManager.getSelectedItem();
+            path = selectedItem._path;
+        }
+
+        fs.stat(path, function(err, stats) {
+            if (err) {
+                showErrorDialog(err);
+                return;
+            }
+
+            if (stats.type === "DIRECTORY") {
+                options.recursive = true
+            }
+        });
+
+        if (!IBIPFS.isReady()) {
+          IBIPFS.init((err) => {
+            if (err) { throw err; }
+
+            goInterPlanetary(IBIPFS, selectedItem, options);
+          });
+        } else {
+          goInterPlanetary(IBIPFS, selectedItem, options);
+        }
+
+        function goInterPlanetary(IBIPFS, selectedItem, options) {
+            IBIPFS.handle().addFromFs(selectedItem._path, options, (err, result) => {
+              if (err) { throw err; }
+
+              const cid = result[selectedItem._path][0].hash;
+
+              ProjectManager
+              .setCid(selectedItem, cid);
+            })
+        }
+    }
+
+    function handleIBIPFSPub() {
+        console.log('Publishing to Inter-Planetary ...');
+
+        handleIBIPFSGo();
+    }
+
     /** Reload Without Extensions commnad handler **/
     var handleReloadWithoutExts = _.partial(handleReload, true);
 
@@ -1901,6 +1965,11 @@ define(function (require, exports, module) {
     CommandManager.register(showInOS,                                Commands.NAVIGATE_SHOW_IN_OS,            handleShowInOS);
     CommandManager.register(quitString,                              Commands.FILE_QUIT,                      handleFileQuit);
     CommandManager.register(Strings.CMD_SHOW_IN_TREE,                Commands.NAVIGATE_SHOW_IN_FILE_TREE,     handleShowInTree);
+
+    // III: IBIPFS commands for going Inter-Planetary
+    //CommandManager.register('ibipfs',                                Commands.CMD_IBIPFS,                     handleIBIPFS);
+    CommandManager.register('GoInterPlanetary',                      Commands.CMD_IBIPFS_GO,                  handleIBIPFSGo);
+    //CommandManager.register('ibipfs-pub',                            Commands.CMD_IBIPFS_PUB,                 handleIBIPFSPub);
 
     // These commands have no UI representation and are only used internally
     CommandManager.registerInternal(Commands.APP_ABORT_QUIT,            handleAbortQuit);

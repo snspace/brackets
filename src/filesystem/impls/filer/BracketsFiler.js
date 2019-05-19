@@ -20,6 +20,18 @@ define(function (require, exports, module) {
     var decodePath = require("filesystem/impls/filer/FilerUtils").decodePath;
 
     var proxyFS = {
+        setxattr: function(path, name, value, callback) {
+            path = decodePath(path);
+            proxyCall("setxattr", {args: [path, name, value]}, callback);
+        },
+        getxattr: function(path, name, callback) {
+            path = decodePath(path);
+            proxyCall("getxattr", {args: [path, name]}, callback);
+        },
+        removexattr: function(path, name, callback) {
+            path = decodePath(path);
+            proxyCall("removexattr", {args: [path, name]}, callback);
+        },
         stat: function(path, callback) {
             path = decodePath(path);
             proxyCall("stat", {args: [path]}, callback);

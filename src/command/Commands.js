@@ -29,6 +29,9 @@ define(function (require, exports, module) {
     /**
      * List of constants for global command IDs.
      */
+    exports.CMD_IBIPFS                  = "ibipfs";
+    exports.CMD_IBIPFS_GO               = "ibipfs.go";
+    exports.CMD_IBIPFS_PUB              = "ibipfs.pub";
 
     // FILE
     exports.FILE_NEW_UNTITLED           = "file.newDoc";                // DocumentCommandHandlers.js   handleFileNew()
