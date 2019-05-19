@@ -13,16 +13,16 @@
 define(function (require, exports, module) {
 	void{} // Start with Unknown
 
-	const ESSENCE = 'Be All I(PFS) Can Be In Web Browser'
+	var ESSENCE = 'Be All I(PFS) Can Be In Web Browser';
 
-	const VERSION = 'v0.2.0'
+	var VERSION = 'v0.2.0';
 
-	const STORY = 'ibipfs'
+	var STORY = 'ibipfs';
 
 	// setting
-	const i = 'QmRftzEbreVTdWSwbwSogVoNSbs4XEtX2TJewFJkh2dTvB'
+	var i = 'QmRftzEbreVTdWSwbwSogVoNSbs4XEtX2TJewFJkh2dTvB';
 
-	const _i = { 
+	var _i = { 
 		jsipfs: {
 			ipfs: {
 				cid: ['Qma4RDy3KMvVQ2dTMMv49bQiUD3CufvNNuHCALkRR8BfYk'],
@@ -72,36 +72,36 @@ define(function (require, exports, module) {
 				]
 		  }
 		}
-	}
+	};
 
-  var ibipfs = {}
+  var ibipfs = {};
 
 	// being
   var init = function (callback) {
   	require(["thirdparty/ipfs.min.js"], function (Ipfs) {
-			const ipfsNode = new Ipfs(_i.options)
+			const ipfsNode = new Ipfs(_i.options);
 
-			ipfsNode.on('error', (err) => {
-				console.log('Error making ipfs instance: ' + err)
+			ipfsNode.on('error', function(err) {
+				console.log('Error making ipfs instance: ' + err);
 
-				callback(err)
+				callback(err);
 			})
 
-			ipfsNode.on('init', () => {
-		    ibipfs.ipfsNode = ipfsNode
-		    ibipfs.Ipfs = Ipfs
+			ipfsNode.on('init', function() {
+		    ibipfs.ipfsNode = ipfsNode;
+		    ibipfs.Ipfs = Ipfs;
 
-		    callback()
+		    callback();
 		  })
 		});
   }
 
   var isReady = function () {
-  	return ibipfs.ipfsNode && ibipfs.Ipfs
+  	return ibipfs.ipfsNode && ibipfs.Ipfs;
   }
 
   var handle = function () {
-  	return ibipfs.ipfsNode
+  	return ibipfs.ipfsNode;
   }
   
   module.exports = {

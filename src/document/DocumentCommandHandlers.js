@@ -1831,7 +1831,7 @@ define(function (require, exports, module) {
         if (!IBIPFS.isReady()) {
           IBIPFS.init();
         } else {
-            console.log('IBIPFS: Being Already!')
+            console.log('IBIPFS: Being Already!');
         }
     }
 
@@ -1840,9 +1840,9 @@ define(function (require, exports, module) {
 
         var options = {
             fs: fs
-        }
+        };
 
-        var selectedItem 
+        var selectedItem;
 
         if(!path) {
             selectedItem = ProjectManager.getSelectedItem();
@@ -1856,12 +1856,12 @@ define(function (require, exports, module) {
             }
 
             if (stats.type === "DIRECTORY") {
-                options.recursive = true
+                options.recursive = true;
             }
         });
 
         if (!IBIPFS.isReady()) {
-          IBIPFS.init((err) => {
+          IBIPFS.init(function (err) {
             if (err) { throw err; }
 
             goInterPlanetary(IBIPFS, selectedItem, options);
@@ -1871,14 +1871,14 @@ define(function (require, exports, module) {
         }
 
         function goInterPlanetary(IBIPFS, selectedItem, options) {
-            IBIPFS.handle().addFromFs(selectedItem._path, options, (err, result) => {
+            IBIPFS.handle().addFromFs(selectedItem._path, options, function (err, result) {
               if (err) { throw err; }
 
-              const cid = result[selectedItem._path][0].hash;
+              var cid = result[selectedItem._path][0].hash;
 
               ProjectManager
               .setCid(selectedItem, cid);
-            })
+            });
         }
     }
 

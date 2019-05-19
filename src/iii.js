@@ -19,10 +19,10 @@
 
     var index = "<html>\n"                                  +
                 "  <head>\n"                                +
-                "    <title>III</title>\n"              +
+                "    <title>In-browser Inter-Planetary IDE</title>\n"              +
                 "  </head>\n"                               +
                 "  <body>\n"                                +
-                "    <p>This is the main page.</p>\n"       +
+                "    <p>The `Web` is largely empowered by developers, who deserve to having powerful IDE(III), within the `Web`.</p>\n"       +
                 "  </body>\n"                               +
                 "</html>";
 

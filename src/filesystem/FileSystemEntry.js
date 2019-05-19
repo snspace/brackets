@@ -82,15 +82,17 @@ define(function (require, exports, module) {
      * @param {FileSystem} fileSystem The file system associated with this entry.
      */
     function FileSystemEntry(path, fileSystem) {
+        var that = this;
+
         this._fileSystem = fileSystem;
         this._id = nextId++;
 
-        this._impl.getxattr(path, "cid", (err, value) => {
+        this._impl.getxattr(path, "cid", function (err, value) {
             if (err) {
               return;
             }
 
-            this._cid = value;
+            that._cid = value;
         });
 
         this._setPath(path);

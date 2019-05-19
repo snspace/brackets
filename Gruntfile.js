@@ -96,7 +96,9 @@ module.exports = function (grunt) {
                             'nls/{,*/}*.js',
                             'thirdparty/github-markdown.css',
                             'thirdparty/bitjs/bitjs-untar.min.js',
+                            'thirdparty/ipfs.min.js',
                             'hosted.*',
+                            'iii.*',
                             // XXXBramble: we don't use src/config.json like Brackets does,
                             // but it needs to exist in dist/ so copy it
                             'config.json',
@@ -230,8 +232,7 @@ module.exports = function (grunt) {
                         'src/bramble/client/**/*.js',
                         'src/bramble/thirdparty/**/*.js',
                         'src/bramble/ChannelUtils.js',
-                        'thirdparty/filer/dist/filer.js',
-                        //'thirdparty/filer/dist/filer.min.js',
+                        'thirdparty/filer/dist/filer.min.js'
                     ]
                 },
                 // Standalone, minified dist/bramble.js iframe api

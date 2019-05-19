@@ -10,23 +10,29 @@ define(function (require, exports, module) {
     var KB = 1000;
     var MB = 1000 * KB;
 
-    // 5MB default size limit for total project size on disk
-    var DEFAULT_PROJECT_SIZE_LIMIT = 5 * MB;
+    // default size limit for total project size on disk
+    //var DEFAULT_PROJECT_SIZE_LIMIT = 5 * MB;
+    var DEFAULT_PROJECT_SIZE_LIMIT = 3068 * MB;
 
-    // 3MB size limit for imported files.
-    var REGULAR_FILE_SIZE_LIMIT_MB = 3 * MB;
+    // size limit for imported files.
+    //var REGULAR_FILE_SIZE_LIMIT_MB = 3 * MB;
+    var REGULAR_FILE_SIZE_LIMIT_MB = 30 * MB;
 
-    // 5MB size limit for imported archives (zip & tar)
-    var ARCHIVE_FILE_LIMIT_MB = 5 * MB;
+    // size limit for imported archives (zip & tar)
+    //var ARCHIVE_FILE_LIMIT_MB = 5 * MB;
+    var ARCHIVE_FILE_LIMIT_MB = 60 * MB;
 
-    // 12MB size limit for imported image files that can be auto-resized (png, jpg)
-    var RESIZABLE_IMAGE_FILE_LIMIT_MB = 12 * MB;
+    // size limit for imported image files that can be auto-resized (png, jpg)
+    //var RESIZABLE_IMAGE_FILE_LIMIT_MB = 12 * MB;
+    var RESIZABLE_IMAGE_FILE_LIMIT_MB = 30 * MB;
 
-    // 250KB size limit for images we are auto-resizing (our ideal size)
-    var RESIZED_IMAGE_TARGET_SIZE_KB = 250 * KB;
+    // size limit for images we are auto-resizing (our ideal size)
+    //var RESIZED_IMAGE_TARGET_SIZE_KB = 250 * KB;
+    var RESIZED_IMAGE_TARGET_SIZE_KB = 3000 * KB;
 
-    // 20KB +/- of error tolerance when we auto-resize images
-    var IMAGE_RESIZE_TOLERANCE_KB = 20 * KB;
+    // +/- of error tolerance when we auto-resize images
+    //var IMAGE_RESIZE_TOLERANCE_KB = 20 * KB;
+    var IMAGE_RESIZE_TOLERANCE_KB = 1000 * KB;
 
     // Pretty print a size in bytes in KB or MB.
     // Based on https://github.com/sindresorhus/pretty-bytes/blob/master/index.js (MIT)

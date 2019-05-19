@@ -1,13 +1,24 @@
 # III: In-browser Inter-Planetary IDE
-> The `Web` is largely empowered by our developers, who deserves to having powerful IDE(III), within the `Web`.
+> The `Web` is largely empowered by developers, who deserve to having powerful IDE(III), within the `Web`.
 
 **Based on _Bramble_, which is based on _Brackets_**
 
 > [III](https://github.com/snspace/brackets) <- [Bramble](https://github.com/mozilla/brackets) <- [Brackets](https://github.com/adobe/brackets)
 
+_**Notice:**_
+
+- The motivation of this project is the desire of a powerful web developer tool, right inside web, a distributed web.
+- _Brackets and Bramble(Port of Brackets for Browser) portion_ can be used as it is, as a code editor for the web in browser.
+- As a major new feature, _`Inter-Planetary` portion_ is @poc(Proof of Concept) now, which probably will be kept working on continuously.
+
 ### Forwarding
 
-:doing: -> [IBIPFS](https://github.com/snspace/ibipfs) for Inter-Planetary
+:doing: -> _Alpha: using-building-using cycles towards a fully functional IDE_
+
+:done:
+---
+_[IBIPFS](https://github.com/snspace/ibipfs)_ for Inter-Planetary // Proof of Concept
+![iii](iii.png)
 `III/Bramble/Brackets`:
 - Menu[IBIPFS]? or
 - `src/main` <-> `filesystem/impls/ibipfs` <-> `src/iii/client/main.js` <-> `thirdparty/ibipfs`?
@@ -17,8 +28,6 @@
 :eyes: [filer: Node-like file system for browsers](https://github.com/filerjs/filer) // `.../providers/ibipfs.js`?
 > `ibipfs`: "This place is based on the abstraction of database(indexedDB, memory, websql), is it fit for me???" // `ibipfs.object`(which is a _legacy_ API)?   
 > `ibipfs`: `filer` looks like the `files`(MFS) perspective of mine. // Both are `indexedDB` behind the scene?
-
-:done:
 ---
 _Chore_: Fixes to setup for local development :eyes: _How to setup ..._
 - * _add_ `version` to `src/package.json` // Otherwise, `npm-install-src` @grunt may fail.
