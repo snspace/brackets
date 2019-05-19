@@ -30,7 +30,7 @@ _[IBIPFS](https://github.com/snspace/ibipfs)_ for Inter-Planetary // Proof of Co
 > `ibipfs`: `filer` looks like the `files`(MFS) perspective of mine. // Both are `indexedDB` behind the scene?
 ---
 _Chore_: Fixes to setup for local development :eyes: _How to setup ..._
-- * _add_ `version` to `src/package.json` // Otherwise, `npm-install-src` @grunt may fail.
+- _add_ `version` to `src/package.json` // Otherwise, `npm-install-src` @grunt may fail.
 - typo error in `src/extensions/bramble-extensions.json` (HtmlEntityCodeHints to HTMLEntityCodeHints)
 - some commands/scripts changes in `package.json` and `Gruntfile.js`
 
